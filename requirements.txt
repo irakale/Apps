@@ -1,7 +1,11 @@
-dash
-plotly
 pandas
-flask
-gunicorn  
 matplotlib
 seaborn
+numpy
+scipy
+scikit-learn
+dask
+dash
+plotly
+flask
+gunicorn
