@@ -22,7 +22,7 @@ from sklearn.impute import IterativeImputer
 from sklearn.impute import KNNImputer
 import warnings
 warnings.filterwarnings('ignore')
-get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline')
 import dash
 from dash import dcc, html
 import plotly.express as px
