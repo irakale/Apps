@@ -73,6 +73,8 @@ for column in df_initial.columns:
 # === Dash App Setup ===
 app = dash.Dash(__name__)
 
+server = app.server
+
 app.layout = html.Div([
     html.H1("Comprehensive Loan Analysis Dashboard", style={'textAlign': 'center', 'color': '#1E90FF', 'marginBottom': '30px'}),
     
