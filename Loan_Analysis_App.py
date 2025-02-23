@@ -173,7 +173,26 @@ def update_dashboard(selected_genders, selected_risks, selected_purposes):
         html.Div([html.H6("Avg DTI Ratio"), html.H4(f"{filtered_df['Debt-to-Income Ratio'].mean():.2%}")])
     ]
 
-    trend_fig = px.line(filtered_df, x='Years at Current Job', y='Loan Amount', title='Loan Amount Trend')
+    trend_data = (filtered_df.groupby('Years at Current Job')['Loan Amount']
+              .mean()
+              .reset_index()
+              .dropna()
+              .sort_values(by='Years at Current Job'))
+
+# 
+    trend_data['Years at Current Job'] = pd.to_numeric(trend_data['Years at Current Job'], errors='coerce')
+    trend_fig = px.line(
+        trend_data, 
+        x='Years at Current Job', 
+        y='Loan Amount', 
+        title='Loan Amount Trend',
+        markers=True  # Adds dots for clarity
+    )
+    
+    trend_fig.update_layout(
+        xaxis=dict(type='linear')  # Forces numerical axis
+    )
+
     age_fig = px.histogram(filtered_df, x='Age', color='Gender', title='Age Distribution')
     income_fig = px.box(filtered_df, x='Risk Rating', y='Income', color='Gender', title='Income Distribution')
     loan_boxplot = px.box(filtered_df, x='Loan Purpose', y='Loan Amount', color='Risk Rating', title='Loan Amount vs Purpose')
