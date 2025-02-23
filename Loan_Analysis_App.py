@@ -71,63 +71,80 @@ for column in df_initial.columns:
         df_filled.loc[nan_mask, column] = imputed_df_mice.loc[nan_mask, column]
 
 # === Dash App Setup ===
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=['https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'])
 
 server = app.server
 
 app.layout = html.Div([
-    html.H1("Comprehensive Loan Analysis Dashboard", style={'textAlign': 'center', 'color': '#1E90FF', 'marginBottom': '30px'}),
-    
-    # Filters Section
+    # Page Title
+    html.H1("Comprehensive Loan Analysis Dashboard", 
+            style={'textAlign': 'center', 'color': '#1E90FF', 'marginBottom': '30px'}),
+
+    # Filters Section 
     html.Div([
         html.Div([
-            html.Label("Select Gender:"),
+            html.Label("Select Gender:", style={'fontWeight': 'bold'}),
             dcc.Dropdown(
                 id='gender-filter',
                 options=[{'label': gender, 'value': gender} for gender in df_filled['Gender'].unique()],
                 multi=True,
-                value=df_filled['Gender'].unique()
+                value=df_filled['Gender'].unique(),
+                style={'width': '100%'}
             )
-        ], style={'width': '30%', 'display': 'inline-block', 'padding': '10px'}),
+        ], className="col-md-4"),
         
         html.Div([
-            html.Label("Select Risk Rating:"),
+            html.Label("Select Risk Rating:", style={'fontWeight': 'bold'}),
             dcc.Dropdown(
                 id='risk-filter',
                 options=[{'label': rating, 'value': rating} for rating in df_filled['Risk Rating'].unique()],
                 multi=True,
-                value=df_filled['Risk Rating'].unique()
+                value=df_filled['Risk Rating'].unique(),
+                style={'width': '100%'}
             )
-        ], style={'width': '30%', 'display': 'inline-block', 'padding': '10px'}),
+        ], className="col-md-4"),
         
         html.Div([
-            html.Label("Select Loan Purpose:"),
+            html.Label("Select Loan Purpose:", style={'fontWeight': 'bold'}),
             dcc.Dropdown(
                 id='purpose-filter',
                 options=[{'label': purpose, 'value': purpose} for purpose in df_filled['Loan Purpose'].unique()],
                 multi=True,
-                value=df_filled['Loan Purpose'].unique()
+                value=df_filled['Loan Purpose'].unique(),
+                style={'width': '100%'}
             )
-        ], style={'width': '30%', 'display': 'inline-block', 'padding': '10px'}),
-    ], style={'backgroundColor': '#F0F8FF', 'padding': '20px', 'borderRadius': '10px', 'marginBottom': '20px'}),
+        ], className="col-md-4"),
+    ], className="row", style={'marginBottom': '20px'}),
     
-    # Key Metrics Cards
+    # Key Metrics Section 
     html.Div([
         html.H4("Key Metrics", style={'textAlign': 'center', 'marginBottom': '20px'}),
-        html.Div(id='key-metrics', style={'display': 'flex', 'justifyContent': 'space-around'})
-    ]),
-    
-    # Main Visualizations
+        html.Div(id='key-metrics', className="d-flex justify-content-center gap-3 flex-wrap")
+    ], style={'backgroundColor': '#F0F8FF', 'padding': '20px', 'borderRadius': '10px', 'marginBottom': '20px'}),
+
+    # Main Visualizations 
     html.Div([
-        dcc.Graph(id='trend-analysis'),
-        dcc.Graph(id='age-distribution'),
-        dcc.Graph(id='income-distribution'),
-        dcc.Graph(id='loan-amount-boxplot'),
-        dcc.Graph(id='credit-score-scatter'),
-        dcc.Graph(id='risk-heatmap'),
-        dcc.Graph(id='approval-prediction'),
-    ])
+        html.Div([
+            dcc.Graph(id='trend-analysis', style={'height': '400px'}),
+            dcc.Graph(id='age-distribution', style={'height': '400px'})
+        ], className="row"),
+        
+        html.Div([
+            dcc.Graph(id='income-distribution', style={'height': '400px'}),
+            dcc.Graph(id='loan-amount-boxplot', style={'height': '400px'})
+        ], className="row"),
+        
+        html.Div([
+            dcc.Graph(id='credit-score-scatter', style={'height': '400px'}),
+            dcc.Graph(id='risk-heatmap', style={'height': '400px'})
+        ], className="row"),
+        
+        html.Div([
+            dcc.Graph(id='approval-prediction', style={'height': '500px'})
+        ], className="row"),
+    ], style={'maxWidth': '1200px', 'margin': 'auto'})
 ])
+
 
 @app.callback(
     [Output('key-metrics', 'children'),
